@@ -34,7 +34,7 @@ client = Client()
 
 @client.tree.command(name = 'add', description = 'Add a new project to the channel.')
 async def add(interaction: discord.Interaction):
-    await interaction.response.send_modal(ProjectModal)
+    await interaction.response.send_modal(ProjectModal())
 
 # @client.tree.command(name = 'embed', description = 'Embed Test')
 # async def embed(interaction: discord.Interaction, member:discord.Member=None):
