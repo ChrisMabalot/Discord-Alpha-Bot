@@ -13,14 +13,26 @@ client = commands.Bot(command_prefix='.', intents=discord.Intents.all())
 @client.event
 async def on_ready():
     print(f'{client.user} is now running!')
+    print('Syncing commands...')
+    synced = await client.tree.sync()
+    print(f'{str(len(synced))} commands synced successfully!')
+
+@client.tree.command(name = 'hello', description='Test Hello Command')
+async def hello(interaction: discord.Interaction):
+    await interaction.response.send_message(content='hello')
+    await client.close()
 
 @client.command()
-async def hello(ctx):
-    await ctx.send("hello")
-
-@client.command(aliases=['add'])
-async def add_project(ctx):
+async def add(ctx):
     await ctx.send("add project test")
+
+@client.command()
+async def embed(ctx, member:discord.Member=None):
+    if member == None:
+        member = ctx.message.author
+    
+    embed = discord.Embed(title='Test Embed', description = f'This is a test embed written by {member.name}', color = discord.Color.green(), timestamp = ctx.message.created_at)
+    await ctx.send(embed=embed)
 
 client.run(TOKEN)
 
