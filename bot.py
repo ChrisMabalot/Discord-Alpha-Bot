@@ -1,8 +1,8 @@
 import datetime
 import discord
 import os
-import responses
 
+from discord import ui
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -20,29 +20,28 @@ class Client(commands.Bot):
         synced = await client.tree.sync()
         print(f'{str(len(synced))} commands synced successfully!')
 
-class project_modal(discord.ui.Modal, title = 'Add New Project'):
-    project_name = discord.ui.TextInput(label='Project Name')
-    website = discord.ui.TextInput(label='Website')
-    discord_server = discord.ui.TextInput(label='Discord')
-    twitter = discord.ui.TextInput(label='Twitter')
-    additional_info = discord.ui.TextInput(label='Additional Info', style=discord.TextStyle.paragraph)
+class ProjectModal(ui.Modal, title = 'New Project'):
+    project_name = ui.TextInput(label='Project Name', style=discord.TextStyle.short)
+    website = ui.TextInput(label='Website', style=discord.TextStyle.short)
+    discord_server = ui.TextInput(label='Discord', style=discord.TextStyle.short)
+    twitter = ui.TextInput(label='Twitter', style=discord.TextStyle.short)
+    additional_info = ui.TextInput(label='Additional Info', style=discord.TextStyle.paragraph)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.send_message(f'Project Name: {self.project_name}\nWebsite: {self.website}')
 
 client = Client()
 
-@client.tree.command(name = 'hello', description='Test Hello Command')
-async def hello(interaction: discord.Interaction):
-    await interaction.response.send_message(content ='hello')
-
-@client.tree.command(name = 'add', description = 'Add Project Command')
+@client.tree.command(name = 'add', description = 'Add a new project to the channel.')
 async def add(interaction: discord.Interaction):
-    await interaction.response.send_message(content = 'add project test')
+    await interaction.response.send_modal(ProjectModal)
 
-@client.tree.command(name = 'embed', description = 'Embed Test')
-async def embed(interaction: discord.Interaction, member:discord.Member=None):
-    if member == None:
-        member = interaction.user
+# @client.tree.command(name = 'embed', description = 'Embed Test')
+# async def embed(interaction: discord.Interaction, member:discord.Member=None):
+#     if member == None:
+#         member = interaction.user
 
-    embed = discord.Embed(title='Test Embed', description = f'This is a test embed written by {member.mention}', color = discord.Color.green(), timestamp = datetime.datetime.utcnow())
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+#     embed = discord.Embed(title='Test Embed', description = f'This is a test embed written by {member.mention}', color = discord.Color.green(), timestamp = datetime.datetime.utcnow())
+#     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 client.run(TOKEN)
