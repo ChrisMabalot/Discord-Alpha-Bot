@@ -20,6 +20,13 @@ class Client(commands.Bot):
         synced = await client.tree.sync()
         print(f'{str(len(synced))} commands synced successfully!')
 
+class project_modal(discord.ui.Modal, title = 'Add New Project'):
+    project_name = discord.ui.TextInput(label='Project Name')
+    website = discord.ui.TextInput(label='Website')
+    discord_server = discord.ui.TextInput(label='Discord')
+    twitter = discord.ui.TextInput(label='Twitter')
+    additional_info = discord.ui.TextInput(label='Additional Info', style=discord.TextStyle.paragraph)
+
 client = Client()
 
 @client.tree.command(name = 'hello', description='Test Hello Command')
